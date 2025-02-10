@@ -2,7 +2,6 @@
 //  AppDelegate.swift
 //  Pagination
 //
-//  Created by Softsuave-iOS dev on 10/02/25.
 //
 
 import UIKit
