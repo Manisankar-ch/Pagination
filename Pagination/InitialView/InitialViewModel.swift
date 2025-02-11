@@ -5,7 +5,7 @@
 //
 import Foundation
 
-@MainActor
+
 class InitialViewModel: ObservableObject {
     private var networkManager = NetworkManager()
     @Published var isLoading: Bool = false
@@ -13,9 +13,14 @@ class InitialViewModel: ObservableObject {
     private var currentPage: Int = 1
     private var postsPerPage: Int = 20
     
+    @MainActor
     func fetchPosts() async {
         guard !isLoading,  postsList.count < 100 else { return }
         isLoading = true
+        
+        defer {
+            isLoading = false
+        }
         
         let urlString = "https://jsonplaceholder.typicode.com/posts?_page=\(currentPage)&_limit=\(postsPerPage)"
         guard let url = URL(string: urlString) else { return }
