@@ -9,7 +9,7 @@ import Combine
 import SwiftUI
 
 class InitialViewController: UIViewController {
-    var isSwiftUI: Bool = false
+    
     private var viewModel = InitialViewModel()
     private var cancellables = Set<AnyCancellable>()
     
@@ -27,7 +27,9 @@ class InitialViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubViews()
-        viewModel.getPosts()
+        Task {
+            await viewModel.getUsers()
+        }
         addConstraints()
         addObserver()
         navigationController?.topViewController?.view.backgroundColor = .white
@@ -70,16 +72,22 @@ class InitialViewController: UIViewController {
 //MARK: - UITableViewDelegate, UITableViewDataSource
 extension InitialViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.postsList.count
+        return viewModel.usersAndPosts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! InitialTableViewCell
         
         
-        let data = viewModel.postsList[indexPath.row]
-        cell.configure(title: data.title, subtitle: data.body)
+        let data = viewModel.usersAndPosts[indexPath.row]
+        cell.configure(title: data.user.name, subtitle: data.user.email)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let data = viewModel.usersAndPosts[indexPath.row]
+        let vc = PostsViewController(posts: data.posts)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -88,7 +96,7 @@ extension InitialViewController: UITableViewDelegate, UITableViewDataSource {
         let screenHeight = scrollView.frame.size.height
         
         if offsetY > contentHeight - screenHeight {
-            viewModel.getPosts()
+//            viewModel.getPosts()
         }
     }
 }
@@ -104,7 +112,7 @@ extension InitialViewController {
             .store(in: &cancellables)
         
         //For tableView
-        viewModel.$postsList.receive(on: DispatchQueue.main)
+        viewModel.$usersAndPosts.receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.paginationtableView.reloadData()
             }

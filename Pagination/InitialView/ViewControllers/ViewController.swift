@@ -71,7 +71,7 @@ class ViewController: UIViewController {
     }
 
     private func handleSWiftUIPaginationView() {
-        let swiftUIView = InitialView()
+        let swiftUIView = UsersView()
         let hostingController = UIHostingController(rootView: swiftUIView)
         navigationController?.pushViewController(hostingController, animated: true)
 //        addChild(hostingController)

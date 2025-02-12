@@ -7,7 +7,7 @@
 import Foundation
 
 
-class NetworkManager {
+struct NetworkManager {
     
     
     func fetchData<T: Decodable>(from url: URL, model: T.Type, completion: @escaping (Result<T, Error>) -> Void) {
@@ -40,7 +40,7 @@ class NetworkManager {
         .resume()
     }
     
-    func fetchData<T: Decodable>(from url: URL, model: T.Type) async throws -> T {
+    func fetchData<T: Decodable>(from url: URL) async throws -> T {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         

@@ -7,8 +7,8 @@
 import Foundation
 
 struct Post: Codable, Identifiable {
-    var title: String
-    var body: String
-    var id: Int
-    var userId: Int
+    let title: String
+    let body: String
+    let id: Int
+    let userId: Int
 }
