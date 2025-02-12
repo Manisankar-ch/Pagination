@@ -7,10 +7,9 @@
 
 import Foundation
 
-@Observable
-class UsersViewModel {
-    var usersAndPosts: [UsersAndPosts] = []
-    var isLoading: Bool = false
+class UsersViewModel: ObservableObject {
+    @Published var usersAndPosts: [UsersAndPosts] = []
+    @Published var isLoading: Bool = false
     
     private var networkManager = NetworkManager()
     
